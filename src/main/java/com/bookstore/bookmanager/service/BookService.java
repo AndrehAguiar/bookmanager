@@ -45,4 +45,11 @@ public class BookService {
         return repository.findAll().stream()
                 .map(mapper::toDTO).collect(Collectors.toList());
     }
+
+    @Transactional
+    public BookDTO deleteById(Long id) throws BookNotFoundException {
+        BookDTO bookDTO = findById(id);
+        repository.deleteById(id);
+        return bookDTO;
+    }
 }
