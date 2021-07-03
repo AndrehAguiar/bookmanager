@@ -1,7 +1,9 @@
 package com.bookstore.bookmanager.service;
 
+import com.bookstore.bookmanager.dto.BookDTO;
 import com.bookstore.bookmanager.dto.MessageResponseDTO;
 import com.bookstore.bookmanager.entity.Book;
+import com.bookstore.bookmanager.mapper.BookMapper;
 import com.bookstore.bookmanager.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookService {
 
     private final BookRepository repository;
+    private final BookMapper mapper = BookMapper.INSTANDE;
 
     @Autowired
     public BookService(BookRepository repository) {
@@ -18,8 +21,9 @@ public class BookService {
     }
 
     @Transactional
-    public MessageResponseDTO create(Book book) {
-        final Book savedbook = repository.save(book);
+    public MessageResponseDTO create(BookDTO bookDTO) {
+        Book bookToSave = mapper.toModel(bookDTO);
+        final Book savedbook = repository.save(bookToSave);
         return MessageResponseDTO.builder()
                 .message("Book created with ID: " + savedbook.getId())
                 .build();
