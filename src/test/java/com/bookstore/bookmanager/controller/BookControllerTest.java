@@ -14,7 +14,7 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.servlet.view.xml.MarshallingView;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import static com.bookstore.bookmanager.utils.BookUtils.asJsonString;
 import static com.bookstore.bookmanager.utils.BookUtils.createFakeBookDTO;
@@ -40,7 +40,7 @@ public class BookControllerTest {
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-                .setViewResolvers((viewName, locale) -> new MarshallingView())
+                .setViewResolvers((viewName, locale) -> new MappingJackson2JsonView())
                 .build();
     }
 
@@ -63,12 +63,10 @@ public class BookControllerTest {
     void testWhenPostWithInvalidISBNIsCalledThenBookShouldBeCreated() throws Exception {
         BookDTO bookDTO = createFakeBookDTO();
         bookDTO.setIsbn("invalid isbn");
-        MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
-                .message("ISBN format must be a valid format" + bookDTO.getId())
-                .build();
+
         mockMvc.perform(post(BOOK_API_URL_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(bookDTO)))
-                .andExpect(jsonPath("$.message", Is.is(expectedMessageResponse.getMessage())));
+                .andExpect(status().isBadRequest());
     }
 }
