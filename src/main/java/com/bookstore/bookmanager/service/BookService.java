@@ -3,6 +3,7 @@ package com.bookstore.bookmanager.service;
 import com.bookstore.bookmanager.dto.BookDTO;
 import com.bookstore.bookmanager.dto.MessageResponseDTO;
 import com.bookstore.bookmanager.entity.Book;
+import com.bookstore.bookmanager.exception.BookNotFoundException;
 import com.bookstore.bookmanager.mapper.BookMapper;
 import com.bookstore.bookmanager.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +34,14 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public List<BookDTO> findAll() {
-        return repository.findAll().stream()
-                .map(mapper::toDTO).collect(Collectors.toList());
+    public BookDTO findById(Long id) throws BookNotFoundException {
+        return mapper.toDTO(repository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException(id)));
     }
 
     @Transactional(readOnly = true)
-    public BookDTO findById(Long id) throws Exception {
-        return mapper.toDTO(repository.findById(id)
-                .orElseThrow(() -> new Exception("Book not found!")));
+    public List<BookDTO> findAll() {
+        return repository.findAll().stream()
+                .map(mapper::toDTO).collect(Collectors.toList());
     }
 }
