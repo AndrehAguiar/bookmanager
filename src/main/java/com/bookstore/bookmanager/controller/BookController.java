@@ -26,8 +26,13 @@ public class BookController {
         return service.create(bookDTO);
     }
 
+    @GetMapping("/{id}")
+    public BookDTO findById(@PathVariable Long id) throws Exception {
+        return service.findById(id);
+    }
+
     @GetMapping
-    public List<Book> findAll(){
+    public List<BookDTO> findAll(){
         return service.findAll();
     }
 

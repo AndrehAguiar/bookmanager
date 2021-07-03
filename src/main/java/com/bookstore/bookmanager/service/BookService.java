@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -32,7 +33,14 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public List<Book> findAll() {
-        return repository.findAll();
+    public List<BookDTO> findAll() {
+        return repository.findAll().stream()
+                .map(mapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public BookDTO findById(Long id) throws Exception {
+        return mapper.toDTO(repository.findById(id)
+                .orElseThrow(() -> new Exception("Book not found!")));
     }
 }
