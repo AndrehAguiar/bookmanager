@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class BookService {
 
     private final BookRepository repository;
-    private final BookMapper mapper = BookMapper.INSTANDE;
+    private final BookMapper mapper = BookMapper.INSTANCE;
 
     @Autowired
     public BookService(BookRepository repository) {

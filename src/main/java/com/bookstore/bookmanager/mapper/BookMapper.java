@@ -8,7 +8,7 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface BookMapper {
 
-    BookMapper INSTANDE = Mappers.getMapper(BookMapper.class);
+    BookMapper INSTANCE = Mappers.getMapper(BookMapper.class);
 
     Book toModel(BookDTO bookDTO);
 
