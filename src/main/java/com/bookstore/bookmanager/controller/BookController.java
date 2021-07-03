@@ -28,7 +28,7 @@ public class BookController {
 
     @GetMapping
     public List<Book> findAll(){
-        return null;
+        return service.findAll();
     }
 
 }

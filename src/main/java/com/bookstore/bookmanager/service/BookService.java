@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class BookService {
 
@@ -27,5 +29,10 @@ public class BookService {
         return MessageResponseDTO.builder()
                 .message("Book created with ID: " + savedbook.getId())
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Book> findAll() {
+        return repository.findAll();
     }
 }
