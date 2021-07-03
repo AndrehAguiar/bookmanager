@@ -35,8 +35,9 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public BookDTO findById(Long id) throws BookNotFoundException {
-        return mapper.toDTO(repository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException(id)));
+        Book book = repository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException(id));
+        return mapper.toDTO(book);
     }
 
     @Transactional(readOnly = true)
