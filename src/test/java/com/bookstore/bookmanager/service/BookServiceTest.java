@@ -2,20 +2,21 @@ package com.bookstore.bookmanager.service;
 
 import com.bookstore.bookmanager.dto.BookDTO;
 import com.bookstore.bookmanager.entity.Book;
+import com.bookstore.bookmanager.exception.BookNotFoundException;
 import com.bookstore.bookmanager.mapper.BookMapper;
 import com.bookstore.bookmanager.repository.BookRepository;
 import com.bookstore.bookmanager.utils.BookUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,5 +41,15 @@ public class BookServiceTest {
         assertEquals(fakeBook.getName(), bookDTO.getName());
         assertEquals(fakeBook.getIsbn(), bookDTO.getIsbn());
         assertEquals(fakeBook.getPublisherName(), bookDTO.getPublisherName());
+    }
+
+    @Test
+    void whenGivenUnexistingIdThenNotFoundThrowAnExcepiton() {
+        var invalidId = 10L;
+
+        when(repository.findById(invalidId))
+                .thenReturn(Optional.ofNullable(any(Book.class)));
+
+        assertThrows(BookNotFoundException.class, () -> service.findById(invalidId));
     }
 }
