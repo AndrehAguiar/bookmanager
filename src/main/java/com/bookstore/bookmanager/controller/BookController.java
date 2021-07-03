@@ -2,30 +2,31 @@ package com.bookstore.bookmanager.controller;
 
 import com.bookstore.bookmanager.dto.MessageResponseDTO;
 import com.bookstore.bookmanager.entity.Book;
-import com.bookstore.bookmanager.repository.BookRepository;
+import com.bookstore.bookmanager.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/books")
 public class BookController {
 
-    private BookRepository repository;
+    private final BookService service;
 
     @Autowired
-    public BookController(BookRepository repository) {
-        this.repository = repository;
+    public BookController(BookService service) {
+        this.service = service;
     }
 
     @PostMapping
     public MessageResponseDTO create(@RequestBody Book book) {
-        final Book savedbook = repository.save(book);
-        return MessageResponseDTO.builder()
-                .message("Book created with ID: " + savedbook.getId())
-                .build();
+        return service.create(book);
+    }
+
+    @GetMapping
+    public List<Book> findAll(){
+        return null;
     }
 
 }
